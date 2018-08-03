@@ -1,3 +1,6 @@
+// Package callcache will make a method call and cache the response. This can be useful
+// for heavy operations, for which the output does not change very often, for example
+// when making an API call to get a list of entities
 package callcache
 
 import (

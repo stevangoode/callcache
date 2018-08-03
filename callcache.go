@@ -1,6 +1,22 @@
 // Package callcache will make a method call and cache the response. This can be useful
 // for heavy operations, for which the output does not change very often, for example
-// when making an API call to get a list of entities
+// when making an API call to get a list of entities.
+//
+// Simple Example:
+//
+// c := callcache.CallCache{
+//   Interval: time.Duration(2 * time.Second)
+//   Call: api.GetMyData
+// }
+// c.Start()
+//
+// With Parameters:
+//
+// c := callcache.CallCache{
+//   Interval: time.Duration(2 * time.Second)
+//   Call: func () []api.MyDataType {return api.GetMyData(aParameter)}
+// }
+// c.Start()
 package callcache
 
 import (

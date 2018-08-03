@@ -7,8 +7,8 @@ import (
 
 // CallCache describes and contains what is necessary to run the polling and cache the output
 type CallCache struct {
-	interval time.Duration      // How often to fire the function in ms
-	call     func() interface{} // The function to be called
+	Interval time.Duration      // How often to fire the function in ms
+	Call     func() interface{} // The function to be called
 	lock     sync.RWMutex       // The lock for the cached data
 	cache    interface{}        // The cached response from the func
 	stop     chan interface{}   // The stop channel, which when closed, will stop the polling
@@ -31,7 +31,7 @@ func (c *CallCache) Start() chan interface{} {
 
 	// This func will cause the cache to be updated on a schedule
 	go func() {
-		timer := time.NewTicker(c.interval * time.Millisecond)
+		timer := time.NewTicker(c.Interval * time.Millisecond)
 
 		for {
 			select {
@@ -48,9 +48,15 @@ func (c *CallCache) Start() chan interface{} {
 	return c.stop
 }
 
+// Stop will stop the polling and updating until Start is called again
+func (c *CallCache) Stop() {
+	close(c.stop)
+	c.stop = nil
+}
+
 // Update causes the call to be done, and the result cached
 func (c *CallCache) update() {
-	response := c.call()
+	response := c.Call()
 
 	c.lock.Lock()
 	c.cache = response

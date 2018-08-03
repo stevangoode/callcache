@@ -11,8 +11,8 @@ func TestStartCalledImmediate(t *testing.T) {
 	calls := 0
 
 	c := CallCache{}
-	c.call = func() interface{} { calls++; return 0 }
-	c.interval = 1000
+	c.Call = func() interface{} { calls++; return 0 }
+	c.Interval = 100
 	c.Start()
 
 	close(c.stop)
@@ -27,8 +27,8 @@ func TestStartCalledTimeout(t *testing.T) {
 	calls := &callCount
 
 	c := CallCache{}
-	c.call = func() interface{} { *calls++; return 0 }
-	c.interval = time.Duration(5)
+	c.Call = func() interface{} { *calls++; return 0 }
+	c.Interval = time.Duration(5)
 	c.Start()
 
 	time.Sleep(20 * time.Millisecond)
@@ -46,8 +46,8 @@ func TestDataCached(t *testing.T) {
 
 	for i := 0; i < 5; i++ {
 		num := rand.Int()
-		c.call = func() interface{} { return num }
-		c.interval = 1000
+		c.Call = func() interface{} { return num }
+		c.Interval = 1000
 		c.Start()
 
 		close(c.stop)
@@ -55,5 +55,21 @@ func TestDataCached(t *testing.T) {
 		if num != c.Fetch().(int) {
 			t.Fail()
 		}
+	}
+}
+
+func TestStop(t *testing.T) {
+
+	calls := 0
+
+	c := CallCache{}
+	c.Call = func() interface{} { calls++; return 0 }
+	c.Interval = 100
+	c.Start()
+	c.Stop()
+
+	time.Sleep(20 * time.Millisecond)
+	if calls != 1 {
+		t.Fail()
 	}
 }

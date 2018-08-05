@@ -73,3 +73,51 @@ func TestStop(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func Benchmark1msCycle(b *testing.B) {
+	c := CallCache{}
+	c.Call = func() interface{} { return 0 }
+	c.Interval = time.Duration(1 * time.Millisecond)
+	c.Start()
+
+	// fetch the data N times
+	for n := 0; n < b.N; n++ {
+		c.Fetch()
+	}
+}
+
+func Benchmark10msCycle(b *testing.B) {
+	c := CallCache{}
+	c.Call = func() interface{} { return 0 }
+	c.Interval = time.Duration(10 * time.Millisecond)
+	c.Start()
+
+	// fetch the data N times
+	for n := 0; n < b.N; n++ {
+		c.Fetch()
+	}
+}
+
+func Benchmark100msCycle(b *testing.B) {
+	c := CallCache{}
+	c.Call = func() interface{} { return 0 }
+	c.Interval = time.Duration(100 * time.Millisecond)
+	c.Start()
+
+	// fetch the data N times
+	for n := 0; n < b.N; n++ {
+		c.Fetch()
+	}
+}
+
+func Benchmark1000msCycle(b *testing.B) {
+	c := CallCache{}
+	c.Call = func() interface{} { return 0 }
+	c.Interval = time.Duration(1000 * time.Millisecond)
+	c.Start()
+
+	// fetch the data N times
+	for n := 0; n < b.N; n++ {
+		c.Fetch()
+	}
+}
